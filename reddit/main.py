@@ -35,7 +35,6 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-time.sleep(60 * 30)
 while True:
     with open("post.json", "r") as file:
         json_obj = json.load(file)
