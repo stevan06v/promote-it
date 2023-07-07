@@ -155,7 +155,7 @@ while True:
             failedPostings.add(iterator)
 
     # calculations
-    successRate = len(subreddits) / countSuccess if countSuccess != 0 else 0
+    successRate = (len(subreddits) / countSuccess) * 100 if countSuccess != 0 else 0
     failureRate = 100 - successRate
     passedTime = (endTime - startTime) / 60
 
@@ -169,7 +169,7 @@ while True:
     print(bcolors.OKGREEN + "Successful posts: " + str(countSuccess) + "." + bcolors.ENDC)
     print(bcolors.FAIL + "Failed posts: " + str(countFailed) + "." + bcolors.ENDC)
     print(bcolors.OKGREEN + "Successful posts-rate: " + str(successRate) + "%." + bcolors.ENDC)
-    print(bcolors.FAIL + "Failed posts-rate: " + str(failedPostings) + "%." + bcolors.ENDC)
+    print(bcolors.FAIL + "Failed posts-rate: " + str(failureRate) + "%." + bcolors.ENDC)
     print("Passed time: " + str(passedTime) + "min.")
     print("=================================")
 
