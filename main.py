@@ -1,5 +1,4 @@
 import random
-
 import praw
 import os
 import json
@@ -31,7 +30,8 @@ post_image = ""
 
 # set the amount of keywords you want to get subreddit-lists from
 # [0-283]
-keywordAmount = 200
+keywordAmount = 1
+keywordCounter = 0
 
 # in minutes
 sleep = 20
@@ -91,9 +91,13 @@ while True:
 
         # add lists of keyword outputs
         for iterator in post_keywords:
-            # convert object to list of strings
-            subredditsPerKeyword = list(iterator.display_name for iterator in reddit.subreddits.search(iterator))
-            subreddits.update(subredditsPerKeyword)
+            if keywordCounter <= keywordAmount:
+                # convert object to list of strings
+                subredditsPerKeyword = list(iterator.display_name for iterator in reddit.subreddits.search(iterator))
+                subreddits.update(subredditsPerKeyword)
+                keywordCounter = keywordCounter + 1
+            else:
+                break
 
         # combine subreddits
         subreddits.update(subscribed_subreddits)
@@ -134,7 +138,7 @@ while True:
             post_flair = post_flair_obj["text"]
             post_flair_id = post_flair_obj["id"]
 
-            # error occurs if flai id is wrong
+            # error occurs if flair id is wrong
             if post_flair_id != "":
                 subreddit.submit(title=post_title, selftext=post_content, flair_text=post_flair, nsfw=False,
                                  flair_id=post_flair_id)
