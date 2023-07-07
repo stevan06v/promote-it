@@ -18,6 +18,10 @@ startTime = 0
 endTime = 0
 measuredTime = 0
 
+# temp times
+startTempTime = 0
+endTempTime = 0
+
 post_title = ""
 post_content = ""
 post_flair = ""
@@ -68,6 +72,7 @@ countFailed = 0
 
 while True:
     startTime = time.time()
+    startTempTime = time.time()
     if counter <= 1:
         with open("post.json", "r") as file:
             json_obj = json.load(file)
@@ -95,7 +100,18 @@ while True:
         subreddits.update(default_subreddits)
         subreddits.update(popular_subreddits)
 
+    endTempTime = time.time()
+
+    passedTempTime = endTempTime - startTempTime
+
+    # temp stats
+    print("=================================")
+    print("Posts to proceed: " + str(len(subreddits)))
+    print("Passed time collecting subreddits: " + str(passedTempTime))
+    print("=================================")
+
     print("Posting...")
+    time.sleep(5)
 
     for iterator in subreddits:
         try:
@@ -104,7 +120,6 @@ while True:
             # get all attributes with dir --> pretty cool
             requirements = subreddit.post_requirements()
 
-            print(requirements["body_restriction_policy"])
             # check if images are allowed or nor
             isTextPostAllowed = True if requirements["body_restriction_policy"] == "none" else False
 
@@ -118,8 +133,6 @@ while True:
             # parse the flair out the post
             post_flair = post_flair_obj["text"]
             post_flair_id = post_flair_obj["id"]
-
-            print("Flair_id for " + iterator + ": " + post_flair_id)
 
             # error occurs if flai id is wrong
             if post_flair_id != "":
@@ -137,13 +150,14 @@ while True:
 
             failedPostings.add(iterator)
 
-    subreddits.difference(failedPostings)
-
-    endTime = time.time()
-
+    # calculations
     successRate = len(subreddits) / countSuccess if countSuccess != 0 else 0
     failureRate = 100 - successRate
     passedTime = (endTime - startTime) / 60
+
+    subreddits.difference(failedPostings)
+
+    endTime = time.time()
 
     print("=================================")
     print("Iteration count: " + str(counter + 1))
